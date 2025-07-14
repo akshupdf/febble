@@ -15,15 +15,51 @@
 
 html,
 body {
-  font-family: "avenir";
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: "avenir", sans-serif;
   overflow: hidden;
-  overflow-x: hidden;
+}
+
+.video-container {
+  position: relative;
   width: 100vw;
   height: 100vh;
-  background: url("./assets/bg.png");
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
+  overflow: hidden;
+}
+
+.background-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  z-index: -1;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  width: 100%;
+  max-width: 430px;
+  margin: 0 auto;
+  background: transparent;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.content::-webkit-scrollbar {
+  display: none;
+}
+
+.content {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 @font-face {
@@ -84,6 +120,7 @@ body {
   color: #3E1006;
   background-position: center;
   padding: auto;
+  font-weight: 500;
 }
 
 .shiny-button {
@@ -144,7 +181,7 @@ body {
 
 .golden-text {
   color: #Cf9000;
-  font-size: 14px;
+  font-size: 18px;
   text-align: center;
   font-weight: 700
 }
@@ -163,5 +200,12 @@ body {
 
   100% {
     left: 100%;
+  }
+}
+
+
+@media (min-height: 100vh) {
+  .content {
+    height: 100vh;
   }
 }

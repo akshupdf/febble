@@ -42,10 +42,20 @@ interface ChocolateData {
   title: string;
   subtitle: string;
   description: string;
+  chocolates: any;
+  orderId: any;
 }
 
 const ChocolateHamperApp = () => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [box, setBox] = useState("");
+  const [name, setName] = useState("");
+  const [add, setAdd] = useState("");
+  const [code, setCode] = useState("");
+  const [date, setDate] = useState("");
+  const [lastCall, setLastCall] = useState("");
+
+
   const [expandedCard, setExpandedCard] = useState(null);
   const [chData, setChData] = useState<ChocolateData | null>(null);
   const [answers, setAnswers] = useState<UserAnswers>({
@@ -82,54 +92,7 @@ const ChocolateHamperApp = () => {
   };
 
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-
-  const hamperOptions = [
-    {
-      id: 1,
-      name: "VELVET PACT",
-      price: 1199,
-      kcal: "119 KCAL",
-      description: "Warm, soft, silky-smooth chocolate with a new voice on tough days.",
-      ingredients: "Milk Chocolate (55%) (Sugar, Cocoa Butter, Milk Solids, Cocoa Solids), Cashews (10%), Honey (5%), Refined Wheat Flour, Refined Palmolein, Milk Solids, Invert Sugar, Refined Palmolein, Cocoa Solids, Emulsifier (E322), Iodized Salt, Leavening Agent (E500), Flavour (Natural & Nature-identical), Antioxidant (E320). Contains Milk, Cashews, Wheat.",
-      chocolates: ["Dark Chocolate Truffle", "Milk Chocolate Bar", "Hazelnut Crunch", "Caramel Delight"]
-    },
-    {
-      id: 2,
-      name: "SILENT JAZZ",
-      price: 899,
-      kcal: "134 KCAL",
-      description: "Smooth jazz meets chocolate in this harmonious blend of flavors.",
-      ingredients: "Dark Chocolate (60%) (Sugar, Cocoa Butter, Cocoa Solids), Almonds (8%), Vanilla Extract, Sea Salt, Emulsifier (E322), Natural Flavors.",
-      chocolates: ["Dark Jazz Truffle", "Almond Crunch", "Vanilla Bean", "Sea Salt Caramel"]
-    },
-    {
-      id: 3,
-      name: "NUTTY JOY",
-      price: 1099,
-      kcal: "142 KCAL",
-      description: "A celebration of nuts and chocolate in perfect harmony.",
-      ingredients: "Milk Chocolate (50%) (Sugar, Cocoa Butter, Milk Solids), Mixed Nuts (20%), Honey, Cocoa Solids, Emulsifier (E322), Salt.",
-      chocolates: ["Walnut Brownie", "Peanut Butter Cup", "Almond Bark", "Pistachio Delight"]
-    },
-    {
-      id: 4,
-      name: "PEARL AMBER",
-      price: 1299,
-      kcal: "128 KCAL",
-      description: "Elegant amber-hued chocolates with a touch of luxury.",
-      ingredients: "White Chocolate (45%) (Sugar, Cocoa Butter, Milk Solids), Saffron, Cardamom, Rose Petals, Emulsifier (E322), Natural Flavors.",
-      chocolates: ["Saffron White", "Rose Petal", "Cardamom Spice", "Honey Amber"]
-    },
-    {
-      id: 5,
-      name: "MIDNIGHT OATH",
-      price: 1399,
-      kcal: "119 KCAL",
-      description: "Dark, mysterious flavors for the midnight chocolate lover.",
-      ingredients: "Dark Chocolate (70%) (Sugar, Cocoa Butter, Cocoa Solids), Coffee Beans (5%), Rum Essence, Sea Salt, Emulsifier (E322).",
-      chocolates: ["Espresso Dark", "Rum Truffle", "Midnight Mint", "Black Forest"]
-    }
-  ];
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const prepareFinalPayload = (answers: UserAnswers) => {
     const mcqs = [];
@@ -174,6 +137,8 @@ const ChocolateHamperApp = () => {
     setExpandedCard(expandedCard === id ? null : id);
   };
 
+
+
   const questions = [
     {
       id: 'welcome',
@@ -209,48 +174,48 @@ const ChocolateHamperApp = () => {
       type: 'multiple',
       title: 'Every bond has an essence',
       subtitle: 'Let\'s find yours',
-      question: 'How would you describe your sweet side?',
+      question: 'If she were a mobile setting, she’d be…',
       options: [
-        'Subtle and caring',
-        'Bold and expressive',
-        'Thoughtful and deep',
-        'Playful and fun'
+        'Dark mode: Chic',
+        'Bluetooth: Always on, never there',
+        'Airplane mode: Calm, MIA',
+        'None'
       ]
     },
     {
       id: 'singleWatching',
       type: 'multiple',
       title: 'You caught her binge watching',
-      question: 'What genre does she prefer?',
+      question: 'Her love language is…',
       options: [
-        'Romantic comedies',
-        'Psychological thrillers',
-        'Documentary series',
-        'Action adventures'
+        'Roasts, well-timed',
+        'Gifts not words',
+        'Public teasing, always',
+        'None'
       ]
     },
     {
       id: 'siblingBond',
       type: 'multiple',
       title: 'If she were a mood setting, she\'d be',
-      question: 'How would you describe your sibling bond?',
+      question: 'What’s her vibe at family gatherings?',
       options: [
-        'Cozy and warm',
-        'Dynamic and energetic',
-        'Calm and peaceful',
-        'Intense and passionate'
+        'Glam and unbothered',
+        'Aunties’ MVP',
+        'Judging outfits in silence',
+        'None'
       ]
     },
     {
       id: 'playlistMood',
       type: 'multiple',
       title: 'Her love language is',
-      question: 'What\'s her go-to playlist mood?',
+      question: 'If she were a playlist, she’d be…',
       options: [
-        'Chill and mellow',
-        'Upbeat and energetic',
-        'Classical and serene',
-        'Indie and alternative'
+        'Jazz & late-night feels',
+        'Full Bollywood energy',
+        'Indie, but make it aesthetic',
+        'Unpredictable, like her'
       ]
     },
     {
@@ -292,30 +257,43 @@ const ChocolateHamperApp = () => {
       description: 'Based on your answers, we\'ve curated these perfect hampers for your sister.'
     },
     {
+      id: 'chocolate',
+      type: 'chocolate',
+      title: "Choose the box for your one-of-a-kind bond.",
+      subtitle: "Three elegant packaging options, each hand-designed. choose the one that suits her style best."
+    },
+    {
       id: 'finalDetails',
       type: 'details',
       title: 'Final step, final touch',
       description: 'Just a few more details to complete your order'
     },
     {
-      id: 'trustCall',
-      type: 'multiple',
+      id: 'finalQue',
+      type: 'finalQue',
       title: 'Trust us, you\'d want to answer this one',
       subtitle: 'When did you last call her?',
       question: 'When did you last call her?',
       options: [
+        'Today',
         'Yesterday',
         'Last week',
-        'Last month',
-        'It\'s been too long'
+        'Before last week'
       ]
     },
     {
       id: 'confirmation',
       type: 'confirmation',
-      title: 'The final question',
+      title: 'EXCLUSIVELY CURATED HAMPER',
+      subtitle: ' Basis your responses here`s the price for your',
       question: 'Trust us, you\'d want to answer this one. When did you last call her?'
     }
+  ];
+
+  const varieties = [
+    { id: "BOX1", url: "https://res.cloudinary.com/dix0enljq/image/upload/v1752309122/01_knm5hh.png" },
+    { id: "BOX2", url: "https://res.cloudinary.com/dix0enljq/image/upload/v1752309156/03_s1wmv2.png" },
+    { id: "BOX3", url: "https://res.cloudinary.com/dix0enljq/image/upload/v1752309164/05_pqcn0y.png" },
   ];
 
   const currentQuestion = questions[currentStep];
@@ -350,11 +328,90 @@ const ChocolateHamperApp = () => {
 
     try {
       const response = await fetch(
-        "https://reg-backend-staging.fabelle-hamper.vtour.tech/chocolate-box/create",
+        "https://gen-backend-staging.fabelle-hamper.vtour.tech/chocolate-box/create",
         {
           method: "POST",
           headers: { "Content-Type": "application/json", "Authorization": `Bearer ${authToken}` },
           body: JSON.stringify({ ...finalPayload }),
+        }
+      );
+      const data = await response.json();
+      setChData(data.data);
+      handleNext();
+
+    } catch (error) {
+      console.log("Something went wrong. Please try again.", error);
+    }
+
+  }
+
+  const handleChocolateClick = (id: any) => {
+    setBox(id)
+    handleNext();
+  };
+
+
+  const handleSubmitV2 = async () => {
+
+    const finalPayload = {
+      orderId: chData?.orderId,
+      name,
+      address: add,
+      pincode: code,
+      date,
+      phoneNo: localStorage.getItem("userMobile") || "",
+      slideCount: 1,
+      boxId: box,
+      lastCall: lastCall,
+    };
+
+
+    const authToken = localStorage.getItem("authToken");
+
+    if (!authToken) {
+      console.error("No auth token found in localStorage.");
+      return;
+    }
+
+
+    try {
+      const response = await fetch(
+        "https://gen-backend-staging.fabelle-hamper.vtour.tech/chocolate-box/add-delivery-details",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${authToken}` },
+          body: JSON.stringify({ ...finalPayload }),
+        }
+      );
+      const data = await response.json();
+      console.log(data, "data");
+
+      handleNext();
+      localStorage.removeItem("userMobile");
+    } catch (error) {
+      console.log("Something went wrong. Please try again.", error);
+    }
+
+  }
+
+
+  const handleSubmitv3 = async () => {
+
+    const authToken = localStorage.getItem("authToken");
+
+    if (!authToken) {
+      console.error("No auth token found in localStorage.");
+      return;
+    }
+
+
+    try {
+      const response = await fetch(
+        "https://gen-backend-staging.fabelle-hamper.vtour.tech/chocolate-box/confirm-order",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${authToken}` },
+          body: JSON.stringify({ orderId: chData?.orderId }),
         }
       );
       const data = await response.json();
@@ -379,6 +436,14 @@ const ChocolateHamperApp = () => {
       ...prev,
       [questionId]: value
     }));
+  };
+
+  const handleNextv2 = () => {
+    setCurrentIndex((prev) => (prev + 1) % varieties.length);
+  };
+
+  const handlePreviousv2 = () => {
+    setCurrentIndex((prev) => (prev - 1 + varieties.length) % varieties.length);
   };
 
   const renderWelcome = () => (
@@ -464,7 +529,7 @@ const ChocolateHamperApp = () => {
 
           <div className="h-[10vh]">
 
-            <p className="golden-text max-w-45 mx-auto">{currentQuestion.question}</p>
+            <p className="golden-text max-w-45 mx-auto uppercase">{currentQuestion.question}</p>
           </div>
 
           <div className="space-y-3 w-full mx-auto">
@@ -602,8 +667,8 @@ const ChocolateHamperApp = () => {
             />
           </button>
         </div>
-        <div className='w-60 h-60  silver-card text-black'>
-          <p>{chData?.title}</p>
+        <div className='w-60 h-60  silver-card text-black p-6'>
+          <p className='font-bold'>{chData?.title}</p>
           <p>{chData?.subtitle}</p>
           <p>{chData?.description}</p>
           {/* <img
@@ -645,132 +710,218 @@ const ChocolateHamperApp = () => {
       </div>
 
       <div className="max-w-4xl mx-auto  min-h-screen">
-        <div className="space-y-4 flex flex-wrap">
-          {hamperOptions.map((hamper) => (
+        <div className={`space-y-4 grid  md:grid-cols-3 transition-all duration-300 lg:grid-cols-4 gap-2 ${expandedCard ? "grid-cols-1" : "grid-cols-2"}`}>
+          {chData?.chocolates?.map((hamper: any) => (
             <div
               key={hamper.id}
-              className=" rounded-lg w-44 transition-all duration-300 cursor-pointer overflow-hidden"
+              className="rounded-lg w-full md:w-44 transition-all duration-300 cursor-pointer overflow-hidden"
               onClick={() => handleCardClick(hamper.id)}
             >
-              <div className="p-6 flex items-center justify-between">
+              <div
+                className={`p-6 flex items-center justify-between  ${expandedCard === hamper.id ? 'rounded-t-lg' : 'rounded-lg'
+                  }`}
+              >
                 <div className="flex items-center space-x-8">
                   <div>
-                    <h3 className="text-xl font-bold text-amber-100">{hamper.name}</h3>
-                    <p className="text-amber-300 text-sm">{hamper.kcal}</p>
+                    <h3 className="!text-2xl !font-bold no-wrap golden-text">{hamper.uniqueName}</h3>
+                    <p className=" text-sm">{hamper.description}</p>
                   </div>
                 </div>
                 <div className="text-amber-400 transition-transform duration-300 ease-in-out">
                   {expandedCard === hamper.id ? (
-                    <Minus size={24} className="transform rotate-0" />
+                    <Minus size={24} />
                   ) : (
-                    <Plus size={24} className="transform rotate-0" />
+                    <Plus size={24} />
                   )}
                 </div>
               </div>
 
               <div
-                className={`transition-all duration-500 ease-in-out ${expandedCard === hamper.id
-                  ? 'w-[40vh] opacity-100'
+                className={`transition-all duration-500 ease-in-out overflow-hidden ${expandedCard === hamper.id
+                  ? ' opacity-100'
                   : 'max-h-0 opacity-0'
-                  } overflow-hidden`}
+                  }`}
               >
-                <div className="px-6 pb-6 border-t border-amber-700">
+                <div className="px-6 pb-6 border-t border-amber-700 ">
                   <div className="pt-4 space-y-4">
-                    <p className="text-amber-200 text-base leading-relaxed">
-                      {hamper.description}
+                    <p className="text-base leading-relaxed">
+                      {hamper.ingredients}
                     </p>
-
-                    <div className="space-y-3">
-                      <p className="text-sm font-semibold text-amber-100">Includes:</p>
-                      <div className="flex flex-wrap gap-2">
-                        {hamper.chocolates.map((chocolate, index) => (
-                          <span
-                            key={index}
-                            className="bg-amber-700 text-xs px-3 py-1 rounded-full text-amber-100 border border-amber-600"
-                          >
-                            {chocolate}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <p className="text-sm font-semibold text-amber-100">Ingredients:</p>
-                      <p className="text-xs text-amber-300 leading-relaxed">
-                        {hamper.ingredients}
-                      </p>
-                    </div>
                   </div>
                 </div>
               </div>
             </div>
           ))}
         </div>
-      </div>
 
+      </div>
+      <img
+        src={bg2}
+        alt="bg2"
+        className="w-15 h-15 object-contain transition-transform duration-1000  mx-auto mt-40"
+      />
 
     </div>
   );
 
-  const renderFinalDetails = () => (
-    <div className="min-h-screen bg-gradient-to-b from-amber-900 to-amber-950 text-white">
+  const renderChocolateSelection = () => (
+    <div className="min-h-screen overflow-auto text-white">
+      <img
+        src={fl}
+        alt="flare"
+        className="w-15 h-15 mx-auto mt-2"
+      />
+      <h3 className="golden-text  mx-auto uppercase mt-8">{currentQuestion.title}</h3>
+      <p className=" text-xs text-center mx-auto uppercase mt-4">{currentQuestion.subtitle}</p>
+      <div className="p-2 px-4 flex items-center justify-center space-x-4">
+
+        <div className="text-sm">
+          <button
+            onClick={handlePreviousv2}
+            className="flex items-center space-x-2 text-amber-300 hover:text-white"
+          >
+            <img
+              src={bck}
+              alt="Previous"
+              className="w-10 h-10 object-contain transition-transform duration-300 mx-auto"
+            />
+          </button>
+        </div>
+
+        <div>
+          <div
+            key={varieties[currentIndex].id}
+            className="rounded-lg transition-all duration-300 cursor-pointer overflow-hidden"
+          >
+            <img
+              src={varieties[currentIndex].url}
+              alt={varieties[currentIndex].id}
+              className="w-60 h-60 object-contain mx-auto"
+            />
+          </div>
+        </div>
+
+        <div className="text-sm">
+          <button
+            onClick={handleNextv2}
+            className="flex items-center space-x-2 text-amber-300 hover:text-white"
+          >
+            <img
+              src={nxt}
+              alt="Next"
+              className="w-10 h-10 object-contain transition-transform duration-300 mx-auto"
+            />
+          </button>
+        </div>
+      </div>
+
+      <button
+        onClick={() => handleChocolateClick(varieties[currentIndex].id)}
+        className="w-1/2 shiny-button selected  py-3 px-6 rounded-lg transition-colors font-semibold mx-auto justify-center flex"
+      >
+        <span className=''>CHOOSE BOX DESIGN </span>
+      </button>
+      <img
+        src={bg2}
+        alt="bg2"
+        className="w-15 h-15 object-contain transition-transform duration-1000  mx-auto mt-40"
+      />
+    </div>
+  );
+
+  const renderFinalQue = () => (
+    <div className="min-h-screen  text-white">
       <div className="p-6">
         <div className="text-center space-y-4 mb-8">
-          <div className="w-12 h-12 border border-white rounded-full flex items-center justify-center mx-auto">
-            <ShoppingCart className="w-6 h-6" />
-          </div>
-          <h1 className="text-2xl font-serif leading-tight">{currentQuestion.title}</h1>
+          <img
+            src={fl}
+            alt="flare"
+            className="w-15 h-15 mx-auto mt-2"
+          />
+        </div>
+        <div className="h-[10vh]">
+
+          <p className="golden-text  mx-auto uppercase">{currentQuestion.question}</p>
+        </div>
+
+        <div className="space-y-3 w-full mx-auto">
+          {currentQuestion.options?.map((option, index) => (
+            <ShinyOptionButton
+              key={index}
+              text={option}
+              selected={selectedIndex === index}
+              onClick={() => {
+                setLastCall(option)
+              }}
+            />
+          ))}
+        </div>
+
+        <button
+          onClick={() => handleSubmitV2()}
+          className="w-full mt-4 shiny-button selected  py-3 px-6 rounded-lg transition-colors font-semibold"
+        >
+          <span className=''>CONFIRM YOUR ANSWER </span>
+        </button>
+      </div>
+      <img
+        src={bg2}
+        alt="bg2"
+        className="w-15 h-15 object-contain transition-transform duration-1000  mx-auto mt-40"
+      />
+    </div>
+  );
+
+  const renderFinalDetails = () => (
+    <div className="min-h-screen  text-white">
+      <div className="p-6">
+        <div className="text-center space-y-4 mb-8">
+          <img
+            src={fl}
+            alt="flare"
+            className="w-15 h-15 mx-auto mt-2"
+          />
+          <h1 className="golden-text">{currentQuestion.title}</h1>
           <p className="text-base opacity-90">{currentQuestion.description}</p>
         </div>
 
-        <div className="space-y-6 max-w-md mx-auto">
-          <div className="space-y-4">
-            <div className="flex items-center space-x-3">
-              <User className="w-5 h-5 text-amber-300" />
-              <input
-                type="text"
-                placeholder="Full Name"
-                value={answers.hamperName}
-                onChange={(e) => setAnswers(prev => ({ ...prev, hamperName: e.target.value }))}
-                className="flex-1 bg-amber-800 text-white placeholder-amber-300 p-3 rounded-lg border border-amber-600 focus:border-amber-500 focus:outline-none"
-              />
-            </div>
-
-            <div className="flex items-center space-x-3">
-              <MapPin className="w-5 h-5 text-amber-300" />
-              <input
-                type="text"
-                placeholder="Delivery Address"
-                value={answers.address}
-                onChange={(e) => setAnswers(prev => ({ ...prev, address: e.target.value }))}
-                className="flex-1 bg-amber-800 text-white placeholder-amber-300 p-3 rounded-lg border border-amber-600 focus:border-amber-500 focus:outline-none"
-              />
-            </div>
-
-            <div className="flex space-x-3">
-              <input
-                type="text"
-                placeholder="Pincode"
-                value={answers.pincode}
-                onChange={(e) => setAnswers(prev => ({ ...prev, pincode: e.target.value }))}
-                className="flex-1 bg-amber-800 text-white placeholder-amber-300 p-3 rounded-lg border border-amber-600 focus:border-amber-500 focus:outline-none"
-              />
-              <div className="flex items-center space-x-2 flex-1">
-                <Calendar className="w-5 h-5 text-amber-300" />
-                <input
-                  type="date"
-                  value={answers.deliveryDate}
-                  onChange={(e) => setAnswers(prev => ({ ...prev, deliveryDate: e.target.value }))}
-                  className="flex-1 bg-amber-800 text-white p-3 rounded-lg border border-amber-600 focus:border-amber-500 focus:outline-none"
-                />
-              </div>
-            </div>
-          </div>
+        <div className="space-y-6 w-full mx-auto flex flex-col justify-center">
+          <input
+            id="name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="FULL NAME"
+            className="w-fit mx-auto shiny-button p-2 px-8 mt-2 text-white placeholder-gray-400 focus:outline-none focus:ring-0 text-center"
+          />
+          <input
+            id="add"
+            type="text"
+            value={add}
+            onChange={(e) => setAdd(e.target.value)}
+            placeholder="ADDRESS"
+            className="w-fit mx-auto shiny-button p-2 px-8 mt-2 text-white placeholder-gray-400 focus:outline-none focus:ring-0 text-center"
+          />
+          <input
+            id="code"
+            type="number"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            placeholder="PINCODE"
+            className="w-fit mx-auto shiny-button p-2 px-8 mt-2 text-white placeholder-gray-400 focus:outline-none focus:ring-0 text-center"
+          />
+          <input
+            id="date"
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            placeholder="PREFERRED DELIVERY DATE"
+            className="w-fit mx-auto shiny-button p-2 px-8 mt-2 text-white placeholder-gray-400 focus:outline-none focus:ring-0 text-center"
+          />
 
           <button
-            onClick={handleNext}
-            disabled={!answers.hamperName || !answers.address || !answers.pincode || !answers.deliveryDate}
-            className="w-full bg-amber-600 hover:bg-amber-700 disabled:bg-amber-900 disabled:opacity-50 text-white py-3 px-6 rounded-lg transition-colors font-semibold"
+            onClick={() => handleChocolateClick(varieties[currentIndex].id)}
+            className="w-1/2 shiny-button selected  py-3 px-6 rounded-lg transition-colors font-semibold mx-auto justify-center flex"
           >
             Continue
           </button>
@@ -781,52 +932,65 @@ const ChocolateHamperApp = () => {
             onClick={handlePrevious}
             className="flex items-center space-x-2 text-amber-300 hover:text-white"
           >
-            <ChevronLeft className="w-4 h-4" />
-            <span>Back</span>
+            <img
+              src={bck}
+              alt="bg2"
+              className="w-10 h-10 object-contain transition-transform duration-1000  mx-auto"
+            />
           </button>
-          <div className="text-sm opacity-60">
-            {currentStep} / {questions.length - 1}
-          </div>
         </div>
       </div>
     </div>
   );
 
   const renderConfirmation = () => (
-    <div className="min-h-screen bg-gradient-to-b from-amber-900 to-amber-950 text-white flex flex-col items-center justify-center p-6">
-      <div className="text-center space-y-8 max-w-md">
-        <div className="w-20 h-20 border-2 border-white rounded-full flex items-center justify-center mx-auto">
-          <Star className="w-10 h-10" />
-        </div>
+    <div className="min-h-screen overflow-auto text-white">
+      <img
+        src={fl}
+        alt="flare"
+        className="w-15 h-15 mx-auto mt-2"
+      />
+      <h3 className="golden-text  mx-auto uppercase mt-8">{currentQuestion.title}</h3>
+      <p className=" text-xs text-center mx-auto uppercase mt-4">{currentQuestion.subtitle}</p>
+      <div className="p-2 px-4 flex items-center justify-center space-x-4">
 
-        <div className="space-y-4">
-          <h1 className="text-3xl font-serif">Order Confirmed!</h1>
-          <p className="text-lg">Your curated hamper is being prepared with love</p>
-        </div>
 
-        <div className="bg-amber-800 rounded-lg p-6 border border-amber-600 text-left">
-          <h3 className="text-xl font-semibold mb-4">Order Summary</h3>
-          <div className="space-y-2 text-sm">
-            <p><span className="font-semibold">Name:</span> {answers.hamperName}</p>
-            <p><span className="font-semibold">Address:</span> {answers.address}</p>
-            <p><span className="font-semibold">Pincode:</span> {answers.pincode}</p>
-            <p><span className="font-semibold">Delivery Date:</span> {answers.deliveryDate}</p>
+
+        <div>
+          <div
+            key={varieties[currentIndex].id}
+            className="rounded-lg transition-all duration-300 cursor-pointer overflow-hidden"
+          >
+            <img
+              src={varieties[currentIndex].url}
+              alt={varieties[currentIndex].id}
+              className="w-60 h-60 object-contain mx-auto"
+            />
           </div>
         </div>
 
-        <div className="space-y-4">
-          <p className="text-base opacity-90">
-            Your exclusively curated hamper will reach out to you soon.
-          </p>
-          <p className="text-2xl font-bold">₹ 2500</p>
-        </div>
 
-        <button className="bg-amber-600 hover:bg-amber-700 text-white px-8 py-3 rounded-full font-semibold transition-colors">
-          Complete Order
-        </button>
       </div>
+
+      <button
+        onClick={() => handleSubmitv3()}
+        className="w-1/2 shiny-button selected  py-3 px-6 rounded-lg transition-colors font-semibold mx-auto justify-center flex"
+      >
+        <span className=''>CONFIRM ORDER </span>
+      </button>
+      <img
+        src={bg2}
+        alt="bg2"
+        className="w-15 h-15 object-contain transition-transform duration-1000  mx-auto mt-40"
+      />
     </div>
   );
+
+
+  //   YOUR CURATED HAMPER IS RESERVED AND OUR BRAND CONCIERGE
+  // WILL REACH OUT TO YOU SOON
+  // TO PROCEED WITH THE PAYMENT AND
+  // CONFIRM THE ORDER.
 
   const renderCurrentStep = () => {
     switch (currentQuestion.type) {
@@ -842,8 +1006,12 @@ const ChocolateHamperApp = () => {
         return renderTextInput();
       case 'hamper':
         return renderHamperSelection();
+      case 'chocolate':
+        return renderChocolateSelection();
       case 'details':
         return renderFinalDetails();
+      case 'finalQue':
+        return renderFinalQue();
       case 'confirmation':
         return renderConfirmation();
       default:

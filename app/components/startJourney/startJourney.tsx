@@ -7,7 +7,7 @@ import fl from '../../assets/logo.svg'
 import star from '../../assets/star.svg'
 
 export default function StartJourney(props: any) {
-  const [mobile, setMobile] = useState("");
+  const [mobile, setMobile] = useState(() => localStorage.getItem("userMobile") || "");
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -15,6 +15,10 @@ export default function StartJourney(props: any) {
   const [otpSent, setOtpSent] = useState(false);
   const [verified, setVerified] = useState(false);
   const navigate = useNavigate();
+
+  const handleBlur = () => {
+    localStorage.setItem("userMobile", mobile);
+  };
 
 
   const handleSendOtp = async (e: React.FormEvent) => {
@@ -129,6 +133,7 @@ export default function StartJourney(props: any) {
                   type="tel"
                   value={mobile}
                   onChange={(e) => setMobile(e.target.value)}
+                  onBlur={handleBlur}
                   placeholder="10-digit mobile number"
                   className="w-fit mx-auto shiny-button p-2 px-8 mt-2 text-white placeholder-gray-400 focus:outline-none focus:ring-0 text-center"
                 />

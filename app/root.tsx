@@ -9,6 +9,7 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
+import bg from "./assets/logo_bg.mp4"
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -33,13 +34,30 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
+        <div className="video-container">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="background-video"
+          >
+            <source src={bg} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+
+          <div className="content">
+            {children}
+          </div>
+        </div>
+
         <ScrollRestoration />
         <Scripts />
       </body>
     </html>
   );
 }
+
 
 export default function App() {
   return <Outlet />;
