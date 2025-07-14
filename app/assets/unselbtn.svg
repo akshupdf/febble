@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 443.89 80.2">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #3e1006;
+        stroke: url(#linear-gradient);
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: .75px;
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="0" y1="40.1" x2="443.89" y2="40.1" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f8d462"/>
+      <stop offset="0" stop-color="#f6d160"/>
+      <stop offset=".14" stop-color="#d99a44"/>
+      <stop offset=".24" stop-color="#c67833"/>
+      <stop offset=".29" stop-color="#c06c2d"/>
+      <stop offset=".33" stop-color="#c2722f"/>
+      <stop offset=".38" stop-color="#ca8437"/>
+      <stop offset=".44" stop-color="#d7a144"/>
+      <stop offset=".45" stop-color="#dcac49"/>
+      <stop offset=".54" stop-color="#f8d562"/>
+      <stop offset=".64" stop-color="#fefaa7"/>
+      <stop offset=".76" stop-color="#c8a95d"/>
+      <stop offset=".93" stop-color="#bf8236"/>
+      <stop offset="1" stop-color="#c5a051"/>
+    </linearGradient>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <path class="cls-1" d="M56.04.38c-.83,0-1.66.03-2.48.09-5.89-.21-17.69.61-25.67,9.36,0,0-4.79,5.86-9.23,15.44C14.22,34.84,3.92,38.79.38,40.1c0,0,0,0,.01,0,0,0-.01,0-.01,0,3.55,1.31,13.84,5.26,18.28,14.84,4.44,9.58,9.23,15.44,9.23,15.44,7.98,8.75,19.78,9.57,25.67,9.36.82.05,1.65.09,2.48.09h331.82c.84,0,1.66-.03,2.48-.09,5.89.21,17.69-.61,25.67-9.36,0,0,4.79-5.86,9.23-15.44,4.44-9.58,14.73-13.53,18.28-14.84,0,0,0,0-.01,0,0,0,.01,0,.01,0-3.55-1.31-13.84-5.26-18.28-14.84-4.44-9.58-9.23-15.44-9.23-15.44-7.98-8.75-19.78-9.57-25.67-9.36-.82-.05-1.65-.09-2.48-.09H56.04Z"/>
+  </g>
+</svg>
