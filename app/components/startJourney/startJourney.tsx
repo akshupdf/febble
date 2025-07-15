@@ -10,6 +10,7 @@ export default function StartJourney(props: any) {
   const [mobile, setMobile] = useState(() => localStorage.getItem("userMobile") || "");
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
+  const [verLoad, setVerLoad] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [otpError, setOtpError] = useState("");
   const [otpSent, setOtpSent] = useState(false);
@@ -48,6 +49,7 @@ export default function StartJourney(props: any) {
       const data = await response.json();
       if (response.ok) {
         setOtpSent(true);
+        setLoading(false);
       } else {
         setErrorMsg(data.message || "Failed to send OTP.");
       }
@@ -67,7 +69,7 @@ export default function StartJourney(props: any) {
     }
 
     try {
-      setLoading(true);
+      setVerLoad(true);
       const response = await fetch(
         "https://reg-backend-staging.fabelle-hamper.vtour.tech/user/verify-otp",
         {
@@ -83,8 +85,7 @@ export default function StartJourney(props: any) {
       const data = await response.json();
       if (response.ok) {
         localStorage.setItem("authToken", data.data);
-        setVerified(true);
-        navigate("/sibling-equation-test");
+        setVerLoad(true);
       } else {
         setOtpError(data.message || "Invalid OTP.");
       }
@@ -93,18 +94,14 @@ export default function StartJourney(props: any) {
     } catch (error) {
       setOtpError("Something went wrong during verification.");
     } finally {
-      setLoading(false);
+      setVerLoad(false);
     }
   };
 
 
   return (
-    <div className="h-[100vh] overflow-auto">
-      <img
-        src={fl}
-        alt="flare"
-        className="w-15 h-15 mx-auto mt-2"
-      />
+    <div className="h-screen flex flex-col items-center justify-center text-center px-4 py-8">
+
       <div className="w-full  z-10  mx-auto mt-[10%] h-[72vh]">
 
         <div className="text-center animate-fade-in">
@@ -125,6 +122,10 @@ export default function StartJourney(props: any) {
           <div className="golden-text w-60 text-wrap mx-auto">
             SHE'S WORTH THE ONE.
           </div>
+
+          <div className="max-w-60 text-center text-white mx-auto mt-4">
+            <p>This Rakshi, skip the cliches. Let our Master Chocolatiers craft a chocolate box as unique as your bond.</p>
+          </div>
           {!otpSent ? (
             <div>
               <div className=" gap-3 flex flex-col">
@@ -139,7 +140,7 @@ export default function StartJourney(props: any) {
                 />
                 <button
                   type="submit"
-                  className="w-32 otp-shiny-button  mx-auto text-center text-sm  "
+                  className="w-32 otp-shiny-button  mx-auto text-center text-sm cursor-pointer "
                   onClick={handleSendOtp}
                 >
                   <p className="">   {loading ? "Sending..." : "SEND OTP"} </p>
@@ -162,10 +163,10 @@ export default function StartJourney(props: any) {
               />
               <button
                 type="submit"
-                className="shiny-button w-[40vh] mx-auto text-center selected font-bold py-3 px-6  mt-2"
+                className="otp-shiny-button  mx-auto text-center selected font-bold py-3 px-6  mt-2 cursor-pointer"
                 onClick={handleVerifyOtp}
               >
-                VERIFY & BEGIN
+                {!verLoad ? "VERIFY & BEGIN" : "Loading..."}
               </button>
             </div>
             {/* {errorMsg && (
@@ -177,11 +178,7 @@ export default function StartJourney(props: any) {
         </div>
 
       </div>
-      <img
-        src={bg}
-        alt="flare"
-        className="w-15 h-15 mx-auto mt-2 mx-auto"
-      />
+
     </div>
   );
 }

@@ -9,7 +9,9 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
-import bg from "./assets/logo_bg.mp4"
+import logoBg from "./assets/logo_bg.mp4";
+import bg2 from './assets/fs2.svg';
+import fl from './assets/logo.svg';
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -35,6 +37,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <div className="video-container">
+          {/* Background Video */}
           <video
             autoPlay
             muted
@@ -42,10 +45,24 @@ export function Layout({ children }: { children: React.ReactNode }) {
             playsInline
             className="background-video"
           >
-            <source src={bg} type="video/mp4" />
+            <source src={logoBg} type="video/mp4" />
             Your browser does not support the video tag.
           </video>
 
+
+          <img
+            src={fl}
+            alt="flare"
+            className="top-image w-12 h-12 object-contain"
+          />
+
+          <img
+            src={bg2}
+            alt="bg2"
+            className="bottom-image w-12 h-12 object-contain"
+          />
+
+          {/* Content */}
           <div className="content">
             {children}
           </div>

@@ -12,8 +12,4 @@ artifacts:
   files:
     - "**/*"
   discard-paths: no
-<<<<<<< Updated upstream
   base-directory: build/client
-=======
-  base-directory: build/client
->>>>>>> Stashed changes

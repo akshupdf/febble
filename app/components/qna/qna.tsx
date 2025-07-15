@@ -54,7 +54,8 @@ const ChocolateHamperApp = () => {
   const [code, setCode] = useState("");
   const [date, setDate] = useState("");
   const [lastCall, setLastCall] = useState("");
-
+  const [loading, setLoading] = useState(false);
+  const [resloading, setresLoading] = useState(false);
 
   const [expandedCard, setExpandedCard] = useState(null);
   const [chData, setChData] = useState<ChocolateData | null>(null);
@@ -234,20 +235,22 @@ const ChocolateHamperApp = () => {
       id: 'unforgettableMoment',
       type: 'text',
       title: 'Tell us one unforgettable moment with your sibling bond',
-      question: 'Share a special memory:'
+      question: 'Tell us one unforgettable moment with your sibling bond'
     },
     {
       id: 'describeThem',
       type: 'text',
       title: 'In one sentence, how would you describe her?',
-      question: 'Describe her in one sentence:'
+      question: 'In one sentence, how would you describe her?',
+      placeholder: "A memory, an inside joke, or a hearfelt pause - anything that's just `so you two.`"
     },
     {
       id: 'describeThem',
       type: 'text',
       title: 'In one sentence, how would you describe her?',
       question: 'YOUR BOND, LAYERED IN CHOCOLATE',
-      img: card
+      img: card,
+      placeholder: "Witty, warn, mysterious - your words will help up get it just right"
     },
 
     {
@@ -327,6 +330,7 @@ const ChocolateHamperApp = () => {
 
 
     try {
+      setLoading(true);
       const response = await fetch(
         "https://gen-backend-staging.fabelle-hamper.vtour.tech/chocolate-box/create",
         {
@@ -337,6 +341,7 @@ const ChocolateHamperApp = () => {
       );
       const data = await response.json();
       setChData(data.data);
+      setLoading(false);
       handleNext();
 
     } catch (error) {
@@ -384,8 +389,6 @@ const ChocolateHamperApp = () => {
         }
       );
       const data = await response.json();
-      console.log(data, "data");
-
       handleNext();
       localStorage.removeItem("userMobile");
     } catch (error) {
@@ -418,6 +421,35 @@ const ChocolateHamperApp = () => {
       setChData(data.data);
       handleNext();
 
+    } catch (error) {
+      console.log("Something went wrong. Please try again.", error);
+    }
+
+  }
+
+  const generateRes = async () => {
+
+    const authToken = localStorage.getItem("authToken");
+
+    if (!authToken) {
+      console.error("No auth token found in localStorage.");
+      return;
+    }
+
+
+    try {
+      setresLoading(true);
+      const response = await fetch(
+        "https://gen-backend-staging.fabelle-hamper.vtour.tech/chocolate-box/try-again",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${authToken}` },
+          body: JSON.stringify({ orderId: chData?.orderId }),
+        }
+      );
+      const data = await response.json();
+      setChData(data.data);
+      setresLoading(false);
     } catch (error) {
       console.log("Something went wrong. Please try again.", error);
     }
@@ -480,34 +512,22 @@ const ChocolateHamperApp = () => {
   );
 
   const renderWelcomev2 = () => (
-    <div className="min-h-screen  text-white flex flex-col items-center justify-center p-6" style={{
-      backgroundImage: `url(${bg})`,
-      backgroundSize: 'cover',
-      backgroundRepeat: 'no-repeat',
-      backgroundPosition: 'center',
-    }} onClick={handleNext}>
-      <img
-        src={fl}
-        alt="flare"
-        className="w-15 h-15 mx-auto mt-2 absolute top-2"
-      />
+    <div className="h-screen flex flex-col items-center justify-center text-center px-4 py-8" onClick={handleNext}>
+
       <div className="text-center space-y-8">
 
         <div className="space-y-4">
           <h1 className="golden-text">{currentQuestion.title}</h1>
-          <p className='w-40 mx-auto text-sm'>Answer at your pace. There are no wrong answers-just yours.</p>
+          <img
+            src={star}
+            alt="star"
+            className="w-3 h-3 mb-2 mx-auto mt-2"
+          />
+          <p className='w-40 mx-auto text-sm text-white'>Answer at your pace. There are no wrong answers-just yours.</p>
         </div>
-        <img
-          src={star}
-          alt="star"
-          className="w-3 h-3 mb-2 mx-auto mt-2"
-        />
+
       </div>
-      <img
-        src={bg2}
-        alt="bg2"
-        className="w-10 h-10 object-contain transition-transform duration-1000  mx-auto absolute bottom-4"
-      />
+
     </div>
   )
 
@@ -518,11 +538,6 @@ const ChocolateHamperApp = () => {
       backgroundRepeat: 'no-repeat',
       backgroundPosition: 'center',
     }}>
-      <img
-        src={fl}
-        alt="flare"
-        className="w-15 h-15 mx-auto mt-2"
-      />
       <div className="flex-1 flex flex-col items-center justify-center p-6 pt-2">
         <div className="text-center space-y-8 max-w-md">
 
@@ -548,7 +563,7 @@ const ChocolateHamperApp = () => {
         </div>
       </div>
 
-      <div className="p-6 flex justify-between items-center pt-0">
+      <div className="p-6 flex mb-[8vh] justify-between items-center pt-0">
         <button
           onClick={handlePrevious}
           className="flex items-center space-x-2 text-amber-300 hover:text-white"
@@ -575,33 +590,27 @@ const ChocolateHamperApp = () => {
           />
         </button>
       </div>
-      <img
-        src={bg2}
-        alt="bg2"
-        className="w-10 h-10 object-contain transition-transform duration-1000  mx-auto"
-      />
     </div>
   );
 
   const renderTextInput = () => (
-    <div className=" text-white flex flex-col relative">
-      <img
-        src={fl}
-        alt="flare"
-        className="w-15 h-15 mx-auto mt-2"
-      />
+    <div className=" h-screen flex flex-col items-center justify-center text-center px-4 py-8">
+
       <div className="flex-1 flex flex-col items-center justify-center p-6 ">
         <div className="text-center space-y-8 max-w-md w-full">
 
 
           <div className="space-y-4">
             <p className="golden-text">{currentQuestion.question}</p>
+            <img
+              src={star}
+              alt="star"
+              className="w-3 h-3 mb-2 mx-auto mt-2"
+            />
+            {
+              currentQuestion.img ? <p className='white_sm_text mt-4'>Crafted by Master Chocolatiers to match your sibling vibe. No two boxes or bonds ae alike.  </p> : " "}
           </div>
-          <img
-            src={star}
-            alt="star"
-            className="w-3 h-3 mb-2 mx-auto mt-2"
-          />
+
           <div className="space-y-4 w-full">
             {
               currentQuestion.img ? <img src={currentQuestion.img} alt="cr" className='w-60 h-60 mx-auto' /> :
@@ -609,8 +618,8 @@ const ChocolateHamperApp = () => {
                 <textarea
                   value={answers[currentQuestion.id as keyof UserAnswers] || ''}
                   onChange={(e) => handleTextInput(e.target.value)}
-                  placeholder="Share your thoughts..."
-                  className="w-60 bg-[#3E1006] mt-4 text-white placeholder-[#84724F] p-4 rounded-lg border border-amber-600 focus:border-amber-500 focus:outline-none resize-none h-40"
+                  placeholder="A memory, an inside joke, or a hearfelt pause - anything that's just `so you two.`"
+                  className="w-60 bg-[#3E1006] text-center mt-4 text-white placeholder-[#84724F] p-4 rounded-lg border border-amber-600 focus:border-amber-500 focus:outline-none resize-none h-40"
                 />}
             {
               currentQuestion.img ? <button
@@ -618,7 +627,7 @@ const ChocolateHamperApp = () => {
                 disabled={!answers[currentQuestion.id as keyof UserAnswers]}
                 className="w-1/2 shiny-button selected  py-3 px-6 rounded-lg transition-colors font-semibold"
               >
-                <span className=''>FINISH </span>
+                <span className=''> {loading ? "Finalizing..." : "FINISH"} </span>
               </button> : <button
                 onClick={handleNext}
                 disabled={!answers[currentQuestion.id as keyof UserAnswers]}
@@ -627,6 +636,8 @@ const ChocolateHamperApp = () => {
                 <span className=''>Next </span>
               </button>
             }
+            {
+              currentQuestion.img ? <p className='white_sm_text mt-4 w-60 text-center mx-auto'>Happy with this? Or want a redo? (You've got <span className='font-bold'>2 replays.</span> ) </p> : " "}
 
 
           </div>
@@ -637,28 +648,20 @@ const ChocolateHamperApp = () => {
             </div>}
         </div>
       </div>
-      <img
-        src={bg2}
-        alt="bg2"
-        className="w-15 h-15 object-contain transition-transform duration-1000  mx-auto mt-40"
-      />
+
     </div>
   );
 
   const renderHamperSelection = () => (
-    <div className="min-h-screen overflow-auto text-white">
-      <img
-        src={fl}
-        alt="flare"
-        className="w-15 h-15 mx-auto mt-2"
-      />
+    <div className="h-screen overflow-auto text-white pt-16 pb-4">
+
       <div className="p-2 px-4 flex">
-        <div className='text-sm pt-8'>
+        <div className='text-sm pt-8 white_sm_text'>
           <p>Happy with this?</p>
           <p>Or want a redo?</p>
           <button
             onClick={handlePrevious}
-            className="flex items-center space-x-2 text-amber-300 hover:text-white"
+            className="flex items-center space-x-2 text-amber-300 hover:text-white mt-2"
           >
             <img
               src={bck}
@@ -667,50 +670,50 @@ const ChocolateHamperApp = () => {
             />
           </button>
         </div>
-        <div className='w-60 h-60  silver-card text-black p-6'>
-          <p className='font-bold'>{chData?.title}</p>
-          <p>{chData?.subtitle}</p>
-          <p>{chData?.description}</p>
-          {/* <img
-            src={scard}
-            alt="bg2"
-            className="w-60 h-60  object-contain transition-transform duration-1000  mx-auto"
-          /> */}
-        </div>
+        {
+          resloading ? <div className="w-60 h-60 rounded-lg bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer bg-[length:200%_100%]"></div>
+            :
+
+            <div className='w-60 h-60  silver-card text-center text-black p-6 text-sm italic'>
+              <p className="font-bold font-sans pb-2">{chData?.title}</p>
+              <hr></hr>
+              <p className='py-2'>{chData?.subtitle}</p>
+              <hr></hr>
+              <p className='py-2'>{chData?.description}</p>
+
+            </div>}
         <div className='text-sm pt-8'>
           <button
             onClick={handleNext}
             className=" items-center space-x-2 text-amber-300 hover:text-white"
           >
-            <p>Happy with this?</p>
-            <p>Or want a redo?</p>
+            <p className='white_sm_text w-24'>You have got 2 replays.</p>
             <img
               src={nxt}
               alt="bg2"
-              className="w-10 h-10 mt-2 object-contain transition-transform duration-1000  mx-auto"
+              className="w-10 h-10 mt-2 object-contain transition-transform duration-1000  mx-auto mt-14"
             />
           </button>
         </div>
       </div>
       <div className='w-80 mx-auto flex justify-center'>
         <button
-          onClick={handleNext}
-          disabled={!answers[currentQuestion.id as keyof UserAnswers]}
-          className=" shiny-button selected text-sm py-3 px-6 "
+          onClick={generateRes}
+          className=" otp-shiny-button selected text-sm py-3 px-6 "
         >
           <span className=''>TRY AGAIN </span>
         </button>
         <button
           onClick={handleNext}
           disabled={!answers[currentQuestion.id as keyof UserAnswers]}
-          className=" shiny-button selected text-sm py-3 px-6 "
+          className=" otp-shiny-button selected text-sm py-3 px-6 "
         >
           <span className=''>MOVE AHEAD </span>
         </button>
       </div>
 
-      <div className="max-w-4xl mx-auto  min-h-screen">
-        <div className={`space-y-4 grid  md:grid-cols-3 transition-all duration-300 lg:grid-cols-4 gap-2 ${expandedCard ? "grid-cols-1" : "grid-cols-2"}`}>
+      <div className="max-w-4xl mx-auto   min-h-screen">
+        <div className={`space-y-4 grid  transition-all  duration-300  gap-2 ${expandedCard ? "grid-cols-1 bg-[#592001]" : "grid-cols-2"}`}>
           {chData?.chocolates?.map((hamper: any) => (
             <div
               key={hamper.id}
@@ -723,8 +726,8 @@ const ChocolateHamperApp = () => {
               >
                 <div className="flex items-center space-x-8">
                   <div>
-                    <h3 className="!text-2xl !font-bold no-wrap golden-text">{hamper.uniqueName}</h3>
-                    <p className=" text-sm">{hamper.description}</p>
+                    <h3 className="text-2xl !font-bold no-wrap golden-text">{hamper.uniqueName}</h3>
+                    <p className="white_sm_text">{hamper.description}</p>
                   </div>
                 </div>
                 <div className="text-amber-400 transition-transform duration-300 ease-in-out">
@@ -744,7 +747,7 @@ const ChocolateHamperApp = () => {
               >
                 <div className="px-6 pb-6 border-t border-amber-700 ">
                   <div className="pt-4 space-y-4">
-                    <p className="text-base leading-relaxed">
+                    <p className="text-base leading-relaxed white_sm_text" >
                       {hamper.ingredients}
                     </p>
                   </div>
@@ -755,22 +758,14 @@ const ChocolateHamperApp = () => {
         </div>
 
       </div>
-      <img
-        src={bg2}
-        alt="bg2"
-        className="w-15 h-15 object-contain transition-transform duration-1000  mx-auto mt-40"
-      />
+
 
     </div>
   );
 
   const renderChocolateSelection = () => (
     <div className="min-h-screen overflow-auto text-white">
-      <img
-        src={fl}
-        alt="flare"
-        className="w-15 h-15 mx-auto mt-2"
-      />
+
       <h3 className="golden-text  mx-auto uppercase mt-8">{currentQuestion.title}</h3>
       <p className=" text-xs text-center mx-auto uppercase mt-4">{currentQuestion.subtitle}</p>
       <div className="p-2 px-4 flex items-center justify-center space-x-4">
@@ -821,11 +816,7 @@ const ChocolateHamperApp = () => {
       >
         <span className=''>CHOOSE BOX DESIGN </span>
       </button>
-      <img
-        src={bg2}
-        alt="bg2"
-        className="w-15 h-15 object-contain transition-transform duration-1000  mx-auto mt-40"
-      />
+
     </div>
   );
 
@@ -833,11 +824,7 @@ const ChocolateHamperApp = () => {
     <div className="min-h-screen  text-white">
       <div className="p-6">
         <div className="text-center space-y-4 mb-8">
-          <img
-            src={fl}
-            alt="flare"
-            className="w-15 h-15 mx-auto mt-2"
-          />
+
         </div>
         <div className="h-[10vh]">
 
@@ -864,11 +851,7 @@ const ChocolateHamperApp = () => {
           <span className=''>CONFIRM YOUR ANSWER </span>
         </button>
       </div>
-      <img
-        src={bg2}
-        alt="bg2"
-        className="w-15 h-15 object-contain transition-transform duration-1000  mx-auto mt-40"
-      />
+
     </div>
   );
 
@@ -945,11 +928,7 @@ const ChocolateHamperApp = () => {
 
   const renderConfirmation = () => (
     <div className="min-h-screen overflow-auto text-white">
-      <img
-        src={fl}
-        alt="flare"
-        className="w-15 h-15 mx-auto mt-2"
-      />
+
       <h3 className="golden-text  mx-auto uppercase mt-8">{currentQuestion.title}</h3>
       <p className=" text-xs text-center mx-auto uppercase mt-4">{currentQuestion.subtitle}</p>
       <div className="p-2 px-4 flex items-center justify-center space-x-4">
@@ -978,11 +957,7 @@ const ChocolateHamperApp = () => {
       >
         <span className=''>CONFIRM ORDER </span>
       </button>
-      <img
-        src={bg2}
-        alt="bg2"
-        className="w-15 h-15 object-contain transition-transform duration-1000  mx-auto mt-40"
-      />
+
     </div>
   );
 

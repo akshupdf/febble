@@ -42,16 +42,42 @@ body {
 
 .content {
   position: relative;
-  z-index: 1;
+  z-index: 10;
   height: 100%;
-  width: 100%;
-  max-width: 430px;
-  margin: 0 auto;
-  background: transparent;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
 }
+
+.top-image,
+.bottom-image {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.intro-logo {
+  animation: fadeIn 1s ease-in-out;
+}
+
+.top-image {
+  top: 10px;
+}
+
+.bottom-image {
+  bottom: 20px;
+}
+
 
 .content::-webkit-scrollbar {
   display: none;
@@ -141,11 +167,23 @@ body {
   background-size: 100% 100%;
   background-position: center;
   color: #3E1006;
-  height: 48px;
+  height: 56px;
+  min-width: 160px;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0 1.5rem;
+  line-height: 1;
+  font-weight: bold;
+  font-size: 0.875rem;
 }
+
+.white_sm_text {
+  font-weight: 400;
+  font-size: 14px;
+  color: #B9B3B2;
+}
+
 
 .shiny-button .shine {
   content: '';
