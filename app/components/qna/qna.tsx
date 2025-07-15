@@ -671,7 +671,11 @@ const ChocolateHamperApp = () => {
           </button>
         </div>
         {
-          resloading ? <div className="w-60 h-60 rounded-lg bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer bg-[length:200%_100%]"></div>
+          resloading ? <div className="w-60 h-60 rounded-lg p-4 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%] animate-shimmer space-y-4">
+            <div className="h-4 bg-white/40 rounded w-3/4"></div>
+            <div className="h-4 bg-white/30 rounded w-2/3"></div>
+            <div className="h-4 bg-white/20 rounded w-full"></div>
+          </div>
             :
 
             <div className='w-60 h-60  silver-card text-center text-black p-6 text-sm italic'>
@@ -705,7 +709,6 @@ const ChocolateHamperApp = () => {
         </button>
         <button
           onClick={handleNext}
-          disabled={!answers[currentQuestion.id as keyof UserAnswers]}
           className=" otp-shiny-button selected text-sm py-3 px-6 "
         >
           <span className=''>MOVE AHEAD </span>
@@ -846,7 +849,7 @@ const ChocolateHamperApp = () => {
 
         <button
           onClick={() => handleSubmitV2()}
-          className="w-full mt-4 shiny-button selected  py-3 px-6 rounded-lg transition-colors font-semibold"
+          className="w-2/3 mx-auto mt-4 otp-shiny-button selected  py-3 px-6 rounded-lg transition-colors font-semibold"
         >
           <span className=''>CONFIRM YOUR ANSWER </span>
         </button>
@@ -910,7 +913,7 @@ const ChocolateHamperApp = () => {
           </button>
         </div>
 
-        <div className="mt-8 flex justify-between items-center">
+        {/* <div className="mt-8 flex justify-between items-center">
           <button
             onClick={handlePrevious}
             className="flex items-center space-x-2 text-amber-300 hover:text-white"
@@ -921,7 +924,7 @@ const ChocolateHamperApp = () => {
               className="w-10 h-10 object-contain transition-transform duration-1000  mx-auto"
             />
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );
@@ -953,7 +956,7 @@ const ChocolateHamperApp = () => {
 
       <button
         onClick={() => handleSubmitv3()}
-        className="w-1/2 shiny-button selected  py-3 px-6 rounded-lg transition-colors font-semibold mx-auto justify-center flex"
+        className="otp-shiny-button selected  py-3 px-6 rounded-lg transition-colors font-semibold mx-auto justify-center flex"
       >
         <span className=''>CONFIRM ORDER </span>
       </button>
